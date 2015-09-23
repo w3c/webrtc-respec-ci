@@ -1,21 +1,32 @@
-RESPEC_BRANCH=master
+RESPEC_BRANCH=gh-pages
 SUPPORTDIR=support
-
+REPOS="https://github.com/w3c/respec https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/halindrome/linkchecker"
 .PHONY: support
 support:
-	DIR=`pwd`
-	@mkdir -p $(SUPPORTDIR) 
-	@git clone https://github.com/w3c/respec.git -b $(RESPEC_BRANCH) $(SUPPORTDIR)/respec
-	@git clone https://github.com/dontcallmedom/webidl-checker.git $(SUPPORTDIR)/webidl-checker
-	@git clone https://github.com/dontcallmedom/widlproc $(SUPPORTDIR)/widlproc
-	@git clone https://github.com/halindrome/linkchecker.git $(SUPPORTDIR)/linkchecker
+	@mkdir -p $(SUPPORTDIR)
+	@for repo in "$(REPOS)"; do \
+		git clone $$repo $(SUPPORTDIR)/`basename $$repo`;\
+	done
+	@cd $(SUPPORTDIR)/respec && git checkout $(RESPEC_BRANCH) && cd ..
 	@cd $(SUPPORTDIR)/widlproc && make obj/widlproc && cd ..
 
-.PHONY: install
-install: support
-	@apt-get install libwww-perl cpanminus
+.PHONY: travissetup
+travissetup: support
+	@apt-get install libwww-perl cpanminus python-lxml
 	@cpanm install CSS::DOM
-	@pip install html5lib lxml html5validator
+	@pip install html5lib html5validator
+
+.PHONY: setup
+setup: support
+	sudo apt-get install libwww-perl libcss-dom-perl  python-lxml
+	@pip install html5lib html5validator
+
+.PHONY: update
+update:
+	@cd $(SUPPORTDIR)/respec && git checkout $(RESPEC_BRANCH) && cd ..
+	for repo in "$(REPOS)"; do \
+		echo $$repo && cd $(SUPPORTDIR)/`basename $$repo` && git pull ; cd .. ;\
+	done
 
 .PHONY: build
 build:
