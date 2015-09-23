@@ -12,7 +12,7 @@ support:
 
 .PHONY: travissetup
 travissetup: support
-	@apt-get install libwww-perl cpanminus python-lxml
+	# .travis.yml need to install libwww-perl cpanminus python-lxml
 	@cpanm install CSS::DOM
 	@pip install html5lib html5validator
 
