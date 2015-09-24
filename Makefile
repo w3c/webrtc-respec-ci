@@ -12,8 +12,7 @@ support:
 
 .PHONY: travissetup
 travissetup: support
-	# .travis.yml need to install libwww-perl cpanminus python-lxml
-	@cpanm --installdeps --notest install CSS::DOM
+	# .travis.yml need to install libwww-perl libcss-dom-perl python-lxml
 	@pip install html5lib html5validator
 
 .PHONY: setup
