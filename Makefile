@@ -1,6 +1,6 @@
 RESPEC_BRANCH=gh-pages
 SUPPORTDIR=support
-REPOS="https://github.com/w3c/respec https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/halindrome/linkchecker"
+REPOS="https://github.com/w3c/respec https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/dontcallmedom/linkchecker"
 .PHONY: support
 support:
 	@mkdir -p $(SUPPORTDIR)
@@ -36,5 +36,5 @@ build:
 check: build
 	phantomjs --ignore-ssl-errors=true --ssl-protocol=tlsv1 $(SUPPORTDIR)/respec/tools/respec2html.js -e -w `cat W3CTRMANIFEST|head -1|cut -d '?' -f 1` build/output.html
 	WIDLPROC_PATH=$(SUPPORTDIR)/widlproc/obj/widlproc python $(SUPPORTDIR)/webidl-checker/webidl-check build/output.html > /dev/null
-	! (perl -T $(SUPPORTDIR)/linkchecker/bin/checklink -S 0  -q -b --suppress-broken 500 build/output.html |grep "^")
+	perl -T $(SUPPORTDIR)/linkchecker/bin/checklink -S 0  -q -b --suppress-broken 500 build/output.html
 	html5validator --root build/
