@@ -36,5 +36,5 @@ build:
 check: build
 	phantomjs --ignore-ssl-errors=true --ssl-protocol=tlsv1 $(SUPPORTDIR)/respec/tools/respec2html.js -e -w `cat W3CTRMANIFEST|head -1|cut -d '?' -f 1` build/output.html
 	WIDLPROC_PATH=$(SUPPORTDIR)/widlproc/obj/widlproc python $(SUPPORTDIR)/webidl-checker/webidl-check build/output.html > /dev/null
-	! (perl -l ~/perl5 -T $(SUPPORTDIR)/linkchecker/bin/checklink -S 0  -q -b --suppress-broken 500 build/output.html |grep "^")
+	! (perl -T $(SUPPORTDIR)/linkchecker/bin/checklink -S 0  -q -b --suppress-broken 500 build/output.html |grep "^")
 	html5validator --root build/
