@@ -18,7 +18,7 @@ support:
 travissetup: support
 	@pip install html5lib html5validator
 # needed to build tidy (travis packages cmake 2.8.7, tidy needs >= 2.8.8)
-	@wget http://www.cmake.org/files/v3.3/cmake-3.3.1-Linux-x86_64.tar.gz $(SUPPORTDIR) && tar -C $(SUPPORTDIR) -xzf $(SUPPORTDIR)/cmake-3.3.1-Linux-x86_64.tar.gz && rm -f $(SUPPORTDIR)/cmake-3.3.1-Linux-x86_64.tar.gz
+	@wget http://www.cmake.org/files/v3.3/cmake-3.3.1-Linux-x86_64.tar.gz -P $(SUPPORTDIR) && tar -C $(SUPPORTDIR) -xzf $(SUPPORTDIR)/cmake-3.3.1-Linux-x86_64.tar.gz && rm -f $(SUPPORTDIR)/cmake-3.3.1-Linux-x86_64.tar.gz
 	cmake := $(SUPPORTDIR)/cmake-3.3.1-Linux-x86_64/bin/cmake
 	cd $(SUPPORTDIR)/tidy-html5/build/cmake && $(SUPPORTDIR)/cmake-3.3.1-Linux-x86_64/bin/cmake ../.. && make
 
