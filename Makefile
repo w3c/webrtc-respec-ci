@@ -30,10 +30,11 @@ setup: support
 
 .PHONY: update
 update:
-	@cd $(SUPPORTDIR)/respec && git checkout $(RESPEC_BRANCH) && cd ..
 	for repo in "$(REPOS)"; do \
 		echo $$repo && cd $(SUPPORTDIR)/`basename $$repo` && git pull ; cd .. ;\
 	done
+	@cd $(SUPPORTDIR)/respec && git checkout $(RESPEC_BRANCH) && cd ..
+	@cd $(SUPPORTDIR)/widlproc && make obj/widlproc && cd ..
 
 .PHONY: build
 build:
