@@ -56,7 +56,7 @@ check: build
 # check that resulting HTML is valid
 	html5validator --root build/
 # check internal links (we exclude http links to avoid reporting SNAFUs)
-	perl -T $(SUPPORTDIR)/linkchecker/bin/checklink -S 0  -q -b --suppress-broken 500 -X "^http(s)?:" build/output.html
+	perl -T $(SUPPORTDIR)/linkchecker/bin/checklink -S 0  -q -b -X "^http(s)?:" build/output.html
 
 .PHONY: tidy
 tidy:
