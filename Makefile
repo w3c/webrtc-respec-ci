@@ -26,7 +26,7 @@ travissetup: support
 
 .PHONY: setup
 setup: support
-	sudo apt-get install libwww-perl libcss-dom-perl  python-lxml cmake
+	sudo apt-get install libwww-perl libcss-dom-perl perl phantomjs python2.7 python-pip python-lxml cmake
 	@pip install html5lib html5validator
 	@cd $(SUPPORTDIR)/tidy-html5/build/cmake && cmake ../.. && make
 
