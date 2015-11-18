@@ -13,22 +13,19 @@ support:
 		git clone $$repo $(SUPPORTDIR)/`basename $$repo`;\
 	done
 	@cd $(SUPPORTDIR)/respec && git checkout $(RESPEC_BRANCH) && cd ..
+	@cd $(SUPPORTDIR)/tidy-html5/build/cmake && cmake ../.. && make
 	@cd $(SUPPORTDIR)/widlproc && make obj/widlproc && cd ..
 
 .PHONY: travissetup
 # .travis.yml need to install libwww-perl libcss-dom-perl python-lxml
 travissetup: support
 	@pip install html5lib html5validator
-# needed to build tidy (travis packages cmake 2.8.7, tidy needs >= 2.8.8)
-	@wget http://www.cmake.org/files/v3.3/cmake-3.3.1-Linux-x86_64.tar.gz -P $(SUPPORTDIR) && tar -C $(SUPPORTDIR) -xzf $(SUPPORTDIR)/cmake-3.3.1-Linux-x86_64.tar.gz && rm -f $(SUPPORTDIR)/cmake-3.3.1-Linux-x86_64.tar.gz
-	cd $(SUPPORTDIR)/tidy-html5/build/cmake && $(SUPPORTDIR)/cmake-3.3.1-Linux-x86_64/bin/cmake ../.. && make
 
 
 .PHONY: setup
 setup: support
 	sudo apt-get install libwww-perl libcss-dom-perl perl phantomjs python2.7 python-pip python-lxml cmake
 	sudo pip install html5lib html5validator
-	@cd $(SUPPORTDIR)/tidy-html5/build/cmake && cmake ../.. && make
 
 .PHONY: update
 update:
