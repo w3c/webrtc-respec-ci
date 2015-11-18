@@ -1,6 +1,8 @@
 RESPEC_BRANCH=gh-pages
 SUPPORTDIR ?= $(CURDIR)/support
 REPOS="https://github.com/w3c/respec https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/dontcallmedom/linkchecker https://github.com/htacg/tidy-html5"
+LINEWRAP=false
+LINEWRAPLENGTH=100
 
 INPUT=`cat W3CTRMANIFEST|head -1|cut -d '?' -f 1`
 
@@ -24,8 +26,8 @@ travissetup: support
 
 .PHONY: setup
 setup: support
-	sudo apt-get install libwww-perl libcss-dom-perl  python-lxml cmake
-	@pip install html5lib html5validator
+	sudo apt-get install libwww-perl libcss-dom-perl perl phantomjs python2.7 python-pip python-lxml cmake
+	sudo pip install html5lib html5validator
 	@cd $(SUPPORTDIR)/tidy-html5/build/cmake && cmake ../.. && make
 
 .PHONY: update
@@ -47,8 +49,8 @@ check: build
 # check input to respec is clean
 	$(SUPPORTDIR)/tidy-html5/build/cmake/tidy -quiet -errors $(INPUT)
 # optionally check line wrapping
-	if [ -n "$(LINEWRAP)" ] ; then \
-	$(SUPPORTDIR)/tidy-html5/build/cmake/tidy -quiet --tidy-mark no -i -w $(LINEWRAP) -utf8 $(INPUT)|diff -q $(INPUT) - || echo $(INPUT)" has lines not wrapped at "$(LINEWRAP)" characters" && false;\
+	if [ "$(LINEWRAP)" = "true" ] ; then \
+	$(SUPPORTDIR)/tidy-html5/build/cmake/tidy -quiet --tidy-mark no -i -w $(LINEWRAPLENGTH) -utf8 $(INPUT)|diff -q $(INPUT) - || echo $(INPUT)" has lines not wrapped at "$(LINEWRAPLENGTH)" characters" && false;\
 	fi
 # check respec validity
 	phantomjs --ignore-ssl-errors=true --ssl-protocol=tlsv1 $(SUPPORTDIR)/respec/tools/respec2html.js -e -w $(INPUT) build/output.html
@@ -59,9 +61,7 @@ check: build
 # check internal links (we exclude http links to avoid reporting SNAFUs)
 	perl -T $(SUPPORTDIR)/linkchecker/bin/checklink -S 0  -q -b -X "^http(s)?:" build/output.html
 
-.PHONY: tidy
-tidy:
-	if [ -n "$(LINEWRAP)" ] ; then \
-	$(SUPPORTDIR)/tidy-html5/build/cmake/tidy -quiet --tidy-mark no -i -w $(LINEWRAP) -utf8 -m $(INPUT); \
-	else echo "Only running tidy when LINEWRAP is set" && false ;\
-	fi
+.PHONY: linewrap
+linewrap:
+	$(SUPPORTDIR)/tidy-html5/build/cmake/tidy -quiet --tidy-mark no -i -w $(LINEWRAPLENGTH) -utf8 -m $(INPUT)
+
