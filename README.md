@@ -55,6 +55,7 @@ addons:
       - libcss-dom-perl
       - python-lxml
       - cmake
+      - cmake-data
 install:
  - git clone https://github.com/w3c/webrtc-respec-ci.git
  - make -f webrtc-respec-ci/Makefile travissetup
