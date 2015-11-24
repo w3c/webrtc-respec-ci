@@ -47,7 +47,7 @@ check: build
 	$(SUPPORTDIR)/tidy-html5/build/cmake/tidy -quiet -errors $(INPUT)
 # optionally check line wrapping
 	if [ "$(LINEWRAP)" = "true" ] ; then \
-	$(SUPPORTDIR)/tidy-html5/build/cmake/tidy -quiet --tidy-mark no -i -w $(LINEWRAPLENGTH) -utf8 $(INPUT)|diff -q $(INPUT) - || echo $(INPUT)" has lines not wrapped at "$(LINEWRAPLENGTH)" characters" && false;\
+	$(SUPPORTDIR)/tidy-html5/build/cmake/tidy -quiet --tidy-mark no -i -w $(LINEWRAPLENGTH) -utf8 $(INPUT)|diff -q $(INPUT) - || (echo $(INPUT)" has lines not wrapped at "$(LINEWRAPLENGTH)" characters" && false);\
 	fi
 # check respec validity
 	phantomjs --ignore-ssl-errors=true --ssl-protocol=tlsv1 $(SUPPORTDIR)/respec/tools/respec2html.js -e -w $(INPUT) build/output.html
