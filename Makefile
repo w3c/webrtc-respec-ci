@@ -1,8 +1,10 @@
-RESPEC_BRANCH=gh-pages
+-include $(CURDIR)/config.mk
+
+RESPEC_BRANCH = gh-pages
 SUPPORTDIR ?= $(CURDIR)/support
-REPOS="https://github.com/w3c/respec https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/dontcallmedom/linkchecker https://github.com/htacg/tidy-html5"
-LINEWRAP=false
-LINEWRAPLENGTH=100
+REPOS = "https://github.com/w3c/respec https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/dontcallmedom/linkchecker https://github.com/htacg/tidy-html5"
+LINEWRAP = false
+LINEWRAPLENGTH ?= 100
 
 INPUT=`cat W3CTRMANIFEST|head -1|cut -d '?' -f 1`
 
