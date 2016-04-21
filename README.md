@@ -41,7 +41,7 @@ make -f ../webrtc-respec-ci/Makefile check
 
 Example `.travis.yml` file using [Travis CI's new container-based infrastructure](http://docs.travis-ci.com/user/workers/container-based-infrastructure/).
 
-```
+```yaml
 language: python
 python:
   - "2.7_with_system_site_packages"
