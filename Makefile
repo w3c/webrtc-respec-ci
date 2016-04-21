@@ -9,6 +9,7 @@ TIDY = $(SUPPORTDIR)/tidy-html5/build/cmake/tidy
 BUILD_TIDY = true
 endif
 WIDLPROC_PATH ?= $(SUPPORTDIR)/widlproc/obj/widlproc
+RESPEC ?= $(SUPPORTDIR)/respec/node_modules
 
 INPUT = $(shell head -1 W3CTRMANIFEST | cut -d '?' -f 1)
 OUTPUT = $(BUILDDIR)/output.html
