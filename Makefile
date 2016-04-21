@@ -81,7 +81,7 @@ $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 	@echo ' $(foreach f,$(BUILD_INPUT),$(BUILDDIR)/$(f): $(f) $(BUILDDIR)\n\t@mkdir -p $$(dir $$@)\n\tcp -f $$< $$@\n)' > $@
 
 $(OUTPUT): $(INPUT) $(SUPPORTDIR)/respec $(BUILD_FILES)
-	node $(SUPPORTDIR)/respec/tools/respec2html.js -e -w --src file://`pwd`/$< --out $@
+	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --src file://`pwd`/$< --out $@
 
 
 ## Machine setup
