@@ -86,6 +86,7 @@ $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 
 $(OUTPUT): $(INPUT) $(RESPEC) $(BUILD_FILES)
 	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --src file://`pwd`/$< --out $@
+	ls -l $@
 
 
 ## Machine setup
