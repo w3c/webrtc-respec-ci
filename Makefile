@@ -9,6 +9,7 @@ TIDY = $(SUPPORTDIR)/tidy-html5/build/cmake/tidy
 BUILD_TIDY = true
 endif
 WIDLPROC_PATH ?= $(SUPPORTDIR)/widlproc/obj/widlproc
+RESPEC ?= $(SUPPORTDIR)/respec/node_modules
 
 INPUT = $(shell head -1 W3CTRMANIFEST | cut -d '?' -f 1)
 OUTPUT = $(BUILDDIR)/output.html
@@ -67,6 +68,9 @@ endif
 $(WIDLPROC_PATH): $(SUPPORTDIR)/widlproc
 	@$(MAKE) -C $< obj/widlproc
 
+$(RESPEC): $(SUPPORTDIR)/respec
+	@cd $(SUPPORTDIR)/respec && npm install
+
 .PHONY: update force_update
 update:: force_update $(foreach repo,$(REPOS),$(call to_dir,$(repo))) $(tidy) $(WIDLPROC_PATH)
 force_update::
@@ -80,7 +84,7 @@ include $(SUPPORTDIR)/build.mk
 $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 	@echo ' $(foreach f,$(BUILD_INPUT),$(BUILDDIR)/$(f): $(f) $(BUILDDIR)\n\t@mkdir -p $$(dir $$@)\n\tcp -f $$< $$@\n)' > $@
 
-$(OUTPUT): $(INPUT) $(SUPPORTDIR)/respec $(BUILD_FILES)
+$(OUTPUT): $(INPUT) $(RESPEC) $(BUILD_FILES)
 	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --src file://`pwd`/$< --out $@
 
 
