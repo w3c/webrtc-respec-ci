@@ -81,7 +81,7 @@ $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 	@echo ' $(foreach f,$(BUILD_INPUT),$(BUILDDIR)/$(f): $(f) $(BUILDDIR)\n\t@mkdir -p $$(dir $$@)\n\tcp -f $$< $$@\n)' > $@
 
 $(OUTPUT): $(INPUT) $(SUPPORTDIR)/respec $(BUILD_FILES)
-	phantomjs --ignore-ssl-errors=true --ssl-protocol=tlsv1 $(SUPPORTDIR)/respec/tools/respec2html.js -e -w $< $@
+	node $(SUPPORTDIR)/respec/tools/respec2html.js -e -w --src file://`pwd`/$< --out $@
 
 
 ## Machine setup
@@ -93,7 +93,7 @@ travissetup::
 
 .PHONY: setup
 setup::
-	sudo apt-get install libwww-perl libcss-dom-perl perl phantomjs python2.7 python-pip python-lxml cmake
+	sudo apt-get install libwww-perl libcss-dom-perl perl python2.7 python-pip python-lxml cmake
 	sudo pip install html5lib html5validator
 
 clean::
