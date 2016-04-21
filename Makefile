@@ -88,9 +88,8 @@ $(OUTPUT): $(INPUT) $(SUPPORTDIR)/respec $(BUILD_FILES)
 
 .PHONY: travissetup
 # .travis.yml need to install libwww-perl libcss-dom-perl python-lxml
-# latest respec2html needs node >= 5.0
+# .travis.yml and also install node with nvm as latest respec2html needs node >= 5.0
 travissetup::
-	nvm install 5
 	pip install html5lib html5validator
 
 .PHONY: setup
