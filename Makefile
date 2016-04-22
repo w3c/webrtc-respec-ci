@@ -84,9 +84,9 @@ include $(SUPPORTDIR)/build.mk
 $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 	@echo ' $(foreach f,$(BUILD_INPUT),$(BUILDDIR)/$(f): $(f) $(BUILDDIR)\n\t@mkdir -p $$(dir $$@)\n\tcp -f $$< $$@\n)' > $@
 
-$(OUTPUT): $(INPUT) $(RESPEC) $(BUILD_FILES)
 # respec2html needs an X server running
-	if test -z "$$DISPLAY"; then Xfvb :0 & ; DISPLAY=":0"; fi; \
+$(OUTPUT): $(INPUT) $(RESPEC) $(BUILD_FILES)
+	if test -z "$$DISPLAY" ; then Xfvb ":0" & DISPLAY=":0"; fi;\
 	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --src file://`pwd`/$< --out $@
 	ls -l $@
 
