@@ -86,7 +86,7 @@ $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 
 # respec2html needs an X server running
 $(OUTPUT): $(INPUT) $(RESPEC) $(BUILD_FILES)
-	if test -z "$$DISPLAY" ; then Xfvb ":0" & DISPLAY=":0"; fi;\
+	if test -z "$$DISPLAY" ; then Xvfb ":0" & DISPLAY=":0"; fi;\
 	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --src file://`pwd`/$< --out $@
 	ls -l $@
 
