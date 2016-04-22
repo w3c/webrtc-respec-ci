@@ -86,12 +86,18 @@ $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 
 # respec2html needs an X server running
 $(OUTPUT): $(INPUT) $(RESPEC) $(BUILD_FILES)
-	if test -z "$$DISPLAY" ; then Xvfb ":0" & DISPLAY=":0"; fi;\
 	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --src file://`pwd`/$< --out $@
 	ls -l $@
 
 
 ## Machine setup
+.PHONY: travis_before_install
+travis_before_install::
+	export CXX="g++-4.8" CC="gcc-4.8"
+	nvm install 5
+	export DISPLAY=:99.0
+	/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 -extension RANDR
+	sh -e /etc/init.d/xvfb start
 
 .PHONY: travissetup
 # .travis.yml need to install libwww-perl libcss-dom-perl python-lxml
