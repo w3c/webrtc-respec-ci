@@ -9,7 +9,7 @@ TIDY = $(SUPPORTDIR)/tidy-html5/build/cmake/tidy
 BUILD_TIDY = true
 endif
 WIDLPROC_PATH ?= $(SUPPORTDIR)/widlproc/obj/widlproc
-RESPEC ?= $(SUPPORTDIR)/respec/node_modules
+RESPEC_INSTALL ?= $(SUPPORTDIR)/respec/node_modules
 
 INPUT = $(shell head -1 W3CTRMANIFEST | cut -d '?' -f 1)
 OUTPUT = $(BUILDDIR)/output.html
@@ -38,7 +38,7 @@ html5valid: $(OUTPUT)
 .PHONY: linkcheck
 linkcheck: $(OUTPUT) $(SUPPORTDIR)/linkchecker
 # check internal links only (we exclude http links to avoid reporting SNAFUs)
-	perl -T $(SUPPORTDIR)/linkchecker/bin/checklink -S 0  -q -b -X "^http(s)?:" $<
+	perl -T $(SUPPORTDIR)/linkchecker/bin/checklink -S 0 -q -b -X "^http(s)?:" $<
 
 .PHONY: tidy
 tidy: $(TIDY)
@@ -68,11 +68,11 @@ endif
 $(WIDLPROC_PATH): $(SUPPORTDIR)/widlproc
 	@$(MAKE) -C $< obj/widlproc
 
-$(RESPEC): $(SUPPORTDIR)/respec
+$(RESPEC_INSTALL): $(SUPPORTDIR)/respec
 	@cd $(SUPPORTDIR)/respec && npm install
 
 .PHONY: update force_update
-update:: force_update $(foreach repo,$(REPOS),$(call to_dir,$(repo))) $(tidy) $(WIDLPROC_PATH)
+update:: force_update $(foreach repo,$(REPOS),$(call to_dir,$(repo))) $(TIDY) $(WIDLPROC_PATH) $(RESPEC_INSTALL)
 force_update::
 	@touch $(SUPPORTDIR)/repos.mk
 
@@ -85,8 +85,7 @@ $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 	@echo ' $(foreach f,$(BUILD_INPUT),$(BUILDDIR)/$(f): $(f) $(BUILDDIR)\n\t@mkdir -p $$(dir $$@)\n\tcp -f $$< $$@\n)' > $@
 
 # respec2html needs an X server running
-$(OUTPUT): $(INPUT) $(RESPEC) $(BUILD_FILES)
-	if test -z "$$DISPLAY" ; then Xvfb ":0" & DISPLAY=":0"; fi;\
+$(OUTPUT): $(INPUT) $(RESPEC_INSTALL) $(BUILD_FILES)
 	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --src file://`pwd`/$< --out $@
 	ls -l $@
 
@@ -95,7 +94,7 @@ $(OUTPUT): $(INPUT) $(RESPEC) $(BUILD_FILES)
 
 .PHONY: travissetup
 # .travis.yml need to install libwww-perl libcss-dom-perl python-lxml
-# .travis.yml and also install node with nvm as latest respec2html needs node >= 5.0
+# also install node with nvm as latest respec2html needs node >= 5.0
 travissetup::
 	pip install html5lib html5validator
 
