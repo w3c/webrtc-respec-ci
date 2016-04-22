@@ -93,6 +93,8 @@ $(OUTPUT): $(INPUT) $(RESPEC) $(BUILD_FILES)
 ## Machine setup
 .PHONY: travis_before_install
 travis_before_install::
+	export NVM_DIR=.nvm
+	source .nvm/nvm.sh
 	export CXX="g++-4.8" CC="gcc-4.8"
 	nvm install 5
 	export DISPLAY=:99.0
