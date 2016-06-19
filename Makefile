@@ -15,7 +15,7 @@ INPUT = $(shell head -1 W3CTRMANIFEST | cut -d '?' -f 1)
 OUTPUT = $(BUILDDIR)/output.html
 
 .PHONY: check
-check:: tidycheck webidl linkcheck
+check:: tidycheck webidl linkcheck html5valid
 
 .PHONY: tidycheck
 tidycheck: $(TIDY)
