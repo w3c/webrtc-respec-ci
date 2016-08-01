@@ -96,11 +96,8 @@ $(OUTPUT): $(INPUT) $(RESPEC_INSTALL) $(BUILD_FILES) $(BUILDDIR)
 .PHONY: travissetup
 # .travis.yml need to install libwww-perl libcss-dom-perl python-lxml
 # also install node with nvm as latest respec2html needs node >= 5.0
-travissetup:: ;
-# Deactivating since we're not doing html5 validation for now
-# and html5lib requires a more recent version of setuptools than the
-# one provided by travis
-#	pip install html5lib html5validator
+travissetup::
+	pip install html5lib==0.999 html5validator
 
 .PHONY: setup
 setup::
