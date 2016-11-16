@@ -1,6 +1,6 @@
 SUPPORTDIR ?= support
 BUILDDIR ?= build
-REPOS = https://github.com/w3c/respec|gh-pages https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/dontcallmedom/linkchecker https://github.com/htacg/tidy-html5
+REPOS = https://github.com/w3c/respec https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/dontcallmedom/linkchecker https://github.com/htacg/tidy-html5
 TIDYCONF ?= $(firstword $(wildcard tidy.config webrtc-respec-ci/tidy.config))
 LINEWRAP ?= false
 
@@ -70,7 +70,9 @@ $(WIDLPROC_PATH): $(SUPPORTDIR)/widlproc
 	@$(MAKE) -C $< obj/widlproc
 
 $(RESPEC_INSTALL): $(SUPPORTDIR)/respec
-	@cd $(SUPPORTDIR)/respec && npm install
+# Force respec revision
+# d685c37 is after the yarn/npm snaffu (and not yet pushed to the stable gh-pages branch)
+	@cd $(SUPPORTDIR)/respec && git checkout d685c37 && npm install
 
 .PHONY: update force_update
 update:: force_update $(foreach repo,$(REPOS),$(call to_dir,$(repo))) $(TIDY) $(WIDLPROC_PATH) $(RESPEC_INSTALL)
