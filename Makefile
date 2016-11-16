@@ -70,7 +70,7 @@ $(WIDLPROC_PATH): $(SUPPORTDIR)/widlproc
 	@$(MAKE) -C $< obj/widlproc
 
 $(RESPEC_INSTALL): $(SUPPORTDIR)/respec
-	@cd $(SUPPORTDIR)/respec && yarn
+	@cd $(SUPPORTDIR)/respec && npm install
 
 .PHONY: update force_update
 update:: force_update $(foreach repo,$(REPOS),$(call to_dir,$(repo))) $(TIDY) $(WIDLPROC_PATH) $(RESPEC_INSTALL)
@@ -96,7 +96,6 @@ $(OUTPUT): $(INPUT) $(RESPEC_INSTALL) $(BUILD_FILES) $(BUILDDIR)
 .PHONY: travissetup
 # .travis.yml need to install libwww-perl libcss-dom-perl python-lxml
 # also install node with nvm as latest respec2html needs node >= 5.0
-# plus yarn
 travissetup::
 	pip install html5lib==0.999 html5validator
 
@@ -104,7 +103,6 @@ travissetup::
 setup::
 	sudo apt-get install libwww-perl libcss-dom-perl perl python2.7 python-pip python-lxml cmake
 	sudo pip install html5lib html5validator
-	sudo npm install -g yarn
 
 clean::
 	rm -rf $(CURDIR)/support $(CURDIR)/build
