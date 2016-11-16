@@ -71,8 +71,9 @@ $(WIDLPROC_PATH): $(SUPPORTDIR)/widlproc
 
 $(RESPEC_INSTALL): $(SUPPORTDIR)/respec
 # Force respec revision
-# d685c37 is after the yarn/npm snaffu (and not yet pushed to the stable gh-pages branch)
-	@cd $(SUPPORTDIR)/respec && git checkout d685c37 && npm install
+# eb60995 is before the yarn/npm snaffu
+# (this temporary until npm replaces yarn in the stable gh-pages branch)
+	@cd $(SUPPORTDIR)/respec && git checkout eb60995 && npm install
 
 .PHONY: update force_update
 update:: force_update $(foreach repo,$(REPOS),$(call to_dir,$(repo))) $(TIDY) $(WIDLPROC_PATH) $(RESPEC_INSTALL)
