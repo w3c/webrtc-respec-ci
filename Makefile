@@ -1,6 +1,6 @@
 SUPPORTDIR ?= support
 BUILDDIR ?= build
-REPOS = https://github.com/w3c/respec|v6.0.0 https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/dontcallmedom/linkchecker https://github.com/htacg/tidy-html5
+REPOS = https://github.com/w3c/respec|gh-pages https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/dontcallmedom/linkchecker https://github.com/htacg/tidy-html5
 TIDYCONF ?= $(firstword $(wildcard tidy.config webrtc-respec-ci/tidy.config))
 LINEWRAP ?= false
 
