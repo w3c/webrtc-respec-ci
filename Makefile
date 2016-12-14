@@ -59,7 +59,7 @@ to_dir = $(SUPPORTDIR)/$(notdir $(call to_url,$(1)))
 to_dot = $(SUPPORTDIR)/.$(notdir $(call to_url,$(1)))
 
 $(SUPPORTDIR)/repos.mk: $(SUPPORTDIR)
-	@echo ' $(foreach repo,$(REPOS),$(call to_dir,$(repo)): $(call to_dot,$(repo))\n$(call to_dot,$(repo)): $<\n\t@[ -d $(call to_dir,$(repo)) ] && git -C $(call to_dir,$(repo)) pull || git clone --depth 5 $(call branch_arg,$(repo)) $(call to_url,$(repo)) $(call to_dir,$(repo))\n\t@touch $$@\n\n)' > $@
+	@printf ' $(foreach repo,$(REPOS),$(call to_dir,$(repo)): $(call to_dot,$(repo))\n$(call to_dot,$(repo)): $<\n\t@[ -d $(call to_dir,$(repo)) ] && git -C $(call to_dir,$(repo)) pull || git clone --depth 5 $(call branch_arg,$(repo)) $(call to_url,$(repo)) $(call to_dir,$(repo))\n\t@touch $$@\n\n)' > $@
 
 ifdef BUILD_TIDY
 $(TIDY): $(SUPPORTDIR)/tidy-html5
@@ -84,7 +84,7 @@ BUILD_INPUT = $(shell tail -n +2 W3CTRMANIFEST)
 BUILD_FILES = $(addprefix $(BUILDDIR)/,$(BUILD_INPUT))
 include $(SUPPORTDIR)/build.mk
 $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
-	@echo ' $(foreach f,$(BUILD_INPUT),$(BUILDDIR)/$(f): $(f) $(BUILDDIR)\n\t@mkdir -p $$(dir $$@)\n\tcp -f $$< $$@\n)' > $@
+	@printf ' $(foreach f,$(BUILD_INPUT),$(BUILDDIR)/$(f): $(f) $(BUILDDIR)\n\t@mkdir -p $$(dir $$@)\n\tcp -f $$< $$@\n\n)' > $@
 
 # respec2html needs an X server running
 $(OUTPUT): $(INPUT) $(RESPEC_INSTALL) $(BUILD_FILES) $(BUILDDIR)
