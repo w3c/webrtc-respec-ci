@@ -1,6 +1,7 @@
 SUPPORTDIR ?= support
 BUILDDIR ?= build
-REPOS = https://github.com/w3c/respec|gh-pages https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/dontcallmedom/linkchecker https://github.com/htacg/tidy-html5
+RESPEC_RELEASE ?= gh-pages
+REPOS = https://github.com/w3c/respec|$(RESPEC_RELEASE) https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/dontcallmedom/linkchecker https://github.com/htacg/tidy-html5
 TIDYCONF ?= $(firstword $(wildcard tidy.config webrtc-respec-ci/tidy.config))
 LINEWRAP ?= false
 LINEWRAPLENGTH = $(shell cat $(TIDYCONF) | grep "^wrap:" | cut -f 2 -d ' ')
