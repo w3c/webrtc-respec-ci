@@ -46,6 +46,7 @@ linkcheck: $(OUTPUT) $(SUPPORTDIR)/linkchecker
 .PHONY: tidy
 tidy: $(TIDY)
 	$(TIDY) -quiet -config $(TIDYCONF) -m $(INPUT)
+	sed -i 's/[[:space:]]*$$//' $(INPUT)
 
 ## Build prerequisites
 
