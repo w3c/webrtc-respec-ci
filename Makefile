@@ -88,9 +88,8 @@ include $(SUPPORTDIR)/build.mk
 $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 	@printf ' $(foreach f,$(BUILD_INPUT),$(BUILDDIR)/$(f): $(f) $(BUILDDIR)\n\t@mkdir -p $$(dir $$@)\n\tcp -f $$< $$@\n\n)' > $@
 
-# respec2html needs an X server running
 $(OUTPUT): $(INPUT) $(RESPEC_INSTALL) $(BUILD_FILES) $(BUILDDIR)
-	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --src file://`pwd`/$< --out $@
+	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --disable-sandbox --timeout 30 --src file://`pwd`/$< --out $@
 	ls -l $@
 
 
