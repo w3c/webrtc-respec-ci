@@ -31,7 +31,7 @@ endif
 
 .PHONY: webidl
 webidl: $(OUTPUT) $(SUPPORTDIR)/webidl-checker $(WIDLPROC_PATH)
-	WIDLPROC_PATH=$(WIDLPROC_PATH) python $(SUPPORTDIR)/webidl-checker/webidl-check $< > /dev/null
+	WIDLPROC_PATH=$(WIDLPROC_PATH) python2 $(SUPPORTDIR)/webidl-checker/webidl-check $< > /dev/null
 
 .PHONY: html5valid
 html5valid: $(OUTPUT)
@@ -88,23 +88,23 @@ include $(SUPPORTDIR)/build.mk
 $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 	@printf ' $(foreach f,$(BUILD_INPUT),$(BUILDDIR)/$(f): $(f) $(BUILDDIR)\n\t@mkdir -p $$(dir $$@)\n\tcp -f $$< $$@\n\n)' > $@
 
-# respec2html needs an X server running
 $(OUTPUT): $(INPUT) $(RESPEC_INSTALL) $(BUILD_FILES) $(BUILDDIR)
-	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --src file://`pwd`/$< --out $@
+	python3 -m http.server 8765 --bind 127.0.0.1 &
+	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --disable-sandbox --timeout 30 --src http://localhost:8765/$< --out $@
 	ls -l $@
 
 
 ## Machine setup
 
 .PHONY: travissetup
-# .travis.yml need to install libwww-perl libcss-dom-perl
-# also install node with nvm as latest respec2html needs node >= 5.0
+# packaged software are directly installed from .travis.yml
+# (eg. nodejs, libwww-perl, libcss-dom-perl)
 travissetup::
 	pip install html5lib==0.999 html5validator lxml
 
 .PHONY: setup
 setup::
-	sudo apt-get install libwww-perl libcss-dom-perl perl python2.7 python-pip python-lxml cmake
+	sudo apt-get install libwww-perl libcss-dom-perl perl python2.7 python3 python-pip python-lxml cmake
 	sudo pip install html5lib html5validator
 
 clean::

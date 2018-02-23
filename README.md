@@ -21,58 +21,67 @@ This Makefile can be used with the [Travis CI](https://travis-ci.org/) continuou
 * HTML5 validity of the generated file using [html5validator/Nu Html Checker](https://github.com/validator/validator)
 * Check internal links using [linkchecker](https://github.com/dontcallmedom/linkchecker)
 
-`linewrap` - Line wrapping. Defaults to 100 chars lines, set desired length with `LINEWRAPLENGTH=xx`
+`tidy` - Cleanup your document markup using [tidy-html5](https://github.com/htacg/tidy-html5)
 
 
 ## Usage
 
 ### Local use
 
+Example usage on the [Media Capture and Streams specification](https://github.com/w3c/mediacapture-main/)
+
 ```bash
-cd WebRTC
-git clone git@github.com:w3c/webrtc-respec-ci.git
 git clone git@github.com:w3c/mediacapture-main.git
 cd mediacapture-main
-make -f ../webrtc-respec-ci/Makefile setup
-make -f ../webrtc-respec-ci/Makefile check
+make setup
+make check
 ```
+
+The `mediacapture-main/Makefile` script will take care of installing and setting up `webrtc-respec-ci` and its dependencies automatically.
 
 ### With Travis
 
-Example `.travis.yml` file using [Travis CI's new container-based infrastructure](http://docs.travis-ci.com/user/workers/container-based-infrastructure/).
+Example `.travis.yml` file using [Travis CI's Container-based infrastructure](https://docs.travis-ci.com/user/reference/overview/#Virtualization-environments).
 
 ```yaml
 language: python
-python:
-  - "2.7_with_system_site_packages"
+
+dist: trusty
+
+branches:
+  only:
+    - /.*/
+
 sudo: false
+
 addons:
   apt:
-    sources:
-      - george-edison55-precise-backports
     packages:
       - libwww-perl
       - libcss-dom-perl
-      - python-lxml
-      - cmake
-      - cmake-data
+  chrome: stable
+
+cache:
+  directories:
+    - node_modules # NPM packages
+
+before_install:
+  - nvm install lts/*
+
 install:
- - git clone https://github.com/w3c/webrtc-respec-ci.git
- - make -f webrtc-respec-ci/Makefile travissetup
+ - make travissetup
+
 script:
- - make -f webrtc-respec-ci/Makefile check
+ - make check
 ```
 
 ### Line wrapping
 
 This script can help you ensure that your modifications do not break line wrapping of the original document.
 
-Line wrapping using default line length:
+Check line wrapping _(using default line length of 100 characters defined in webrtc-respec-ci/tidy.config)_:
 ```bash
-make -f ../webrtc-respec-ci/Makefile linewrap
+LINEWRAP=true make tidycheck
 ```
 
-Line wrapping using custom line length:
-```bash
-make -f ../webrtc-respec-ci/Makefile linewrap LINEWRAPLENGTH=80
-```
+You can define a specific line length for your document by editing `tidy.config` and setting the `wrap` option to the desired line length eg `wrap: 80`.
