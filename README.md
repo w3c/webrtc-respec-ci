@@ -52,9 +52,6 @@ branches:
   only:
     - /.*/
 
-python:
-  - "2.7_with_system_site_packages"
-
 sudo: false
 
 addons:
@@ -62,10 +59,6 @@ addons:
     packages:
       - libwww-perl
       - libcss-dom-perl
-      - python-lxml
-      - cmake
-      - gcc-4.8
-      - g++-4.8
   chrome: stable
 
 cache:
