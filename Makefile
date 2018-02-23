@@ -31,7 +31,7 @@ endif
 
 .PHONY: webidl
 webidl: $(OUTPUT) $(SUPPORTDIR)/webidl-checker $(WIDLPROC_PATH)
-	WIDLPROC_PATH=$(WIDLPROC_PATH) python $(SUPPORTDIR)/webidl-checker/webidl-check $< > /dev/null
+	WIDLPROC_PATH=$(WIDLPROC_PATH) python2 $(SUPPORTDIR)/webidl-checker/webidl-check $< > /dev/null
 
 .PHONY: html5valid
 html5valid: $(OUTPUT)
@@ -89,8 +89,8 @@ $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 	@printf ' $(foreach f,$(BUILD_INPUT),$(BUILDDIR)/$(f): $(f) $(BUILDDIR)\n\t@mkdir -p $$(dir $$@)\n\tcp -f $$< $$@\n\n)' > $@
 
 $(OUTPUT): $(INPUT) $(RESPEC_INSTALL) $(BUILD_FILES) $(BUILDDIR)
-	python2.7 -m SimpleHTTPServer 8000 &
-	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --disable-sandbox --timeout 30 --src http://localhost:8000/$< --out $@
+	python3 -m http.server 8765 --bind 127.0.0.1 &
+	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --disable-sandbox --timeout 30 --src http://localhost:8765/$< --out $@
 	ls -l $@
 
 
@@ -104,7 +104,7 @@ travissetup::
 
 .PHONY: setup
 setup::
-	sudo apt-get install libwww-perl libcss-dom-perl perl python2.7 python-pip python-lxml cmake
+	sudo apt-get install libwww-perl libcss-dom-perl perl python2.7 python3 python-pip python-lxml cmake
 	sudo pip install html5lib html5validator
 
 clean::
