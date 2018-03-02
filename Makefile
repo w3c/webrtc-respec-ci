@@ -89,13 +89,8 @@ $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 	@printf ' $(foreach f,$(BUILD_INPUT),$(BUILDDIR)/$(f): $(f) $(BUILDDIR)\n\t@mkdir -p $$(dir $$@)\n\tcp -f $$< $$@\n\n)' > $@
 
 $(OUTPUT): $(INPUT) $(RESPEC_INSTALL) $(BUILD_FILES) $(BUILDDIR)
-	# Respec can't check local source files anymore https://github.com/w3c/respec/issues/1522
-	python3 -m http.server 8765 --bind 127.0.0.1 & echo $$! > httpserver.pid
-	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --disable-sandbox --timeout 30 --src http://localhost:8765/$< --out $@
-	kill `cat httpserver.pid`
-	rm -f httpserver.pid
+	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --disable-sandbox --timeout 30 --src file://`pwd`/$< --out $@
 	ls -l $@
-
 
 ## Machine setup
 
@@ -107,7 +102,7 @@ travissetup::
 
 .PHONY: setup
 setup::
-	sudo apt-get install libwww-perl libcss-dom-perl perl python2.7 python3 python-pip python-lxml cmake
+	sudo apt-get install libwww-perl libcss-dom-perl perl python2.7 python-pip python-lxml cmake
 	sudo pip install html5lib html5validator
 
 clean::
