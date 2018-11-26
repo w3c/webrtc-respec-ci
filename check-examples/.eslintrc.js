@@ -13,7 +13,9 @@ module.exports = {
         "comma-dangle": "off",
         "no-unused-vars": "off",
         "max-len": "off",
-        "indent": ["error", 2]
+        "indent": ["error", 2],
+        "no-eval": "error",
+        "no-implied-eval": "error"
     },
     "plugins": [
         "html"
