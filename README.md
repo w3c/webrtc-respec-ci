@@ -45,6 +45,7 @@ Example `.travis.yml` file using [Travis CI's Container-based infrastructure](ht
 
 ```yaml
 language: python
+python: "2.7"
 
 dist: trusty
 
