@@ -17,7 +17,7 @@ INPUT = $(shell head -1 W3CTRMANIFEST | cut -d '?' -f 1)
 OUTPUT = $(BUILDDIR)/output.html
 
 .PHONY: check
-check:: tidycheck webidl linkcheck
+check:: tidycheck linkcheck
 # not including html5valid because it is broken until we figure how to run this with oracle-java8
 
 .PHONY: tidycheck
