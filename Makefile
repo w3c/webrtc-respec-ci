@@ -36,7 +36,7 @@ html5valid: $(OUTPUT)
 .PHONY: linkcheck
 linkcheck: $(OUTPUT) $(SUPPORTDIR)/link-checker
 # check internal links only (we exclude http links to avoid reporting SNAFUs)
-	perl -T $(SUPPORTDIR)/link-checker/bin/checklink -S 0 -q -b -X "^http(s)?:" $<
+	perl -T $(SUPPORTDIR)/link-checker/bin/checklink --follow-file-links -q -b -X "^http(s)?:" $<
 
 .PHONY: tidy
 tidy: $(TIDY)
