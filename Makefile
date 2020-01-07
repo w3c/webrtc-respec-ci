@@ -34,9 +34,9 @@ html5valid: $(OUTPUT)
 	html5validator --root $(dir $<)
 
 .PHONY: linkcheck
-linkcheck: $(OUTPUT) $(SUPPORTDIR)/linkchecker
+linkcheck: $(OUTPUT) $(SUPPORTDIR)/link-checker
 # check internal links only (we exclude http links to avoid reporting SNAFUs)
-	perl -T $(SUPPORTDIR)/linkchecker/bin/checklink -S 0 -q -b -X "^http(s)?:" $<
+	perl -T $(SUPPORTDIR)/link-checker/bin/checklink -S 0 -q -b -X "^http(s)?:" $<
 
 .PHONY: tidy
 tidy: $(TIDY)
