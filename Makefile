@@ -1,7 +1,7 @@
 SUPPORTDIR ?= support
 BUILDDIR ?= build
 RESPEC_RELEASE ?= gh-pages
-REPOS = https://github.com/w3c/respec|$(RESPEC_RELEASE) https://github.com/dontcallmedom/webidl-checker https://github.com/dontcallmedom/widlproc https://github.com/dontcallmedom/linkchecker https://github.com/htacg/tidy-html5
+REPOS = https://github.com/w3c/respec|$(RESPEC_RELEASE)  https://github.com/w3c/link-checker https://github.com/htacg/tidy-html5
 TIDYCONF ?= $(firstword $(wildcard tidy.config webrtc-respec-ci/tidy.config))
 LINEWRAP ?= false
 LINEWRAPLENGTH = $(shell cat $(TIDYCONF) | grep "^wrap:" | cut -f 2 -d ' ')
@@ -10,7 +10,6 @@ ifndef TIDY
 TIDY = $(SUPPORTDIR)/tidy-html5/build/cmake/tidy
 BUILD_TIDY = true
 endif
-WIDLPROC_PATH ?= $(SUPPORTDIR)/widlproc/obj/widlproc
 RESPEC_INSTALL ?= $(SUPPORTDIR)/respec/node_modules
 
 INPUT = $(shell head -1 W3CTRMANIFEST | cut -d '?' -f 1)
@@ -28,10 +27,6 @@ ifeq (true,$(LINEWRAP))
 	$(TIDY) -quiet -config $(TIDYCONF) $(INPUT) | diff -q $(INPUT) - || \
 	  (echo $(INPUT)" has lines not wrapped at "$(LINEWRAPLENGTH)" characters" && false)
 endif
-
-.PHONY: webidl
-webidl: $(OUTPUT) $(SUPPORTDIR)/webidl-checker $(WIDLPROC_PATH)
-	WIDLPROC_PATH=$(WIDLPROC_PATH) python2 $(SUPPORTDIR)/webidl-checker/webidl-check $< > /dev/null
 
 .PHONY: html5valid
 html5valid: $(OUTPUT)
@@ -69,14 +64,11 @@ $(TIDY): $(SUPPORTDIR)/tidy-html5
 	@$(MAKE) -C $(SUPPORTDIR)/tidy-html5/build/cmake
 endif
 
-$(WIDLPROC_PATH): $(SUPPORTDIR)/widlproc
-	@$(MAKE) -C $< obj/widlproc
-
 $(RESPEC_INSTALL): $(SUPPORTDIR)/respec
 	@cd $(SUPPORTDIR)/respec && npm install
 
 .PHONY: update force_update
-update:: force_update $(foreach repo,$(REPOS),$(call to_dir,$(repo))) $(TIDY) $(WIDLPROC_PATH) $(RESPEC_INSTALL)
+update:: force_update $(foreach repo,$(REPOS),$(call to_dir,$(repo))) $(TIDY) $(RESPEC_INSTALL)
 force_update::
 	@touch $(SUPPORTDIR)/repos.mk
 
@@ -89,7 +81,7 @@ $(SUPPORTDIR)/build.mk: W3CTRMANIFEST $(SUPPORTDIR)
 	@printf ' $(foreach f,$(BUILD_INPUT),$(BUILDDIR)/$(f): $(f) $(BUILDDIR)\n\t@mkdir -p $$(dir $$@)\n\tcp -f $$< $$@\n\n)' > $@
 
 $(OUTPUT): $(INPUT) $(RESPEC_INSTALL) $(BUILD_FILES) $(BUILDDIR)
-	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --disable-sandbox --timeout 30 --src file://`pwd`/$< --out $@
+	node $(SUPPORTDIR)/respec/tools/respec2html.js -e --timeout 30 --src file://`pwd`/$< --out $@
 	ls -l $@
 
 ## Machine setup
@@ -98,12 +90,12 @@ $(OUTPUT): $(INPUT) $(RESPEC_INSTALL) $(BUILD_FILES) $(BUILDDIR)
 # packaged software are directly installed from .travis.yml
 # (eg. nodejs, libwww-perl, libcss-dom-perl)
 travissetup::
-	pip install html5lib==0.999 html5validator lxml
+	pip install html5validator
 
 .PHONY: setup
 setup::
-	sudo apt-get install libwww-perl libcss-dom-perl perl python2.7 python-pip python-lxml cmake
-	sudo pip install html5lib html5validator
+	sudo apt-get install libwww-perl libcss-dom-perl perl python2.7 python-pip cmake
+	sudo pip install html5validator
 
 clean::
 	rm -rf $(CURDIR)/support $(CURDIR)/build
